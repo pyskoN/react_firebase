@@ -6,7 +6,7 @@ import * as ROUTES from "../constants/routes";
 import { PasswordForgetLink } from "../components/PasswordForget";
 
 const SignIn = () => (
-  <div>
+  <div style={{ minHeight: "76vh" }}>
     <h1 style={{ textAlign: "center" }}>Sign In</h1>
     <SignInForm />
     <SignUpLink />

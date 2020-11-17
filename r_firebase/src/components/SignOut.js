@@ -1,18 +1,20 @@
 import React from "react";
 import { withFirebase } from "../components/Firebase/Firebase";
-// import * as ROUTES from "../constants/routes";
 //history.push(ROUTES.LANDING) didn't work
 import { Redirect } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import * as ROUTES from "../constants/routes";
+import { withRouter } from "react-router-dom";
 
-const SignOut = ({ firebase }) => (
-  <button
-    type="button"
+const SignOut = ({ firebase, history }) => (
+  <Button
+    variant="outline-info "
     onClick={() => {
-      firebase.doSignOut().then(() => <Redirect to="/admin" />);
+      firebase.doSignOut().then(() => history.push(ROUTES.LANDING));
     }}
   >
     Sign Out
-  </button>
+  </Button>
 );
 
-export default withFirebase(SignOut);
+export default withRouter(withFirebase(SignOut));
