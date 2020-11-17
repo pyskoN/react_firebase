@@ -5,7 +5,7 @@ import "../index.css";
 import { Link, withRouter } from "react-router-dom";
 
 const SignUp = () => (
-  <div>
+  <div style={{ minHeight: "76vh" }}>
     <h1 style={{ textAlign: "center" }}>SignUp</h1>
     <SignUpForm />
   </div>
@@ -16,20 +16,33 @@ const INITIAL_STATE = {
   email: "",
   passwordOne: "",
   passwordTwo: "",
+  phone: "",
   error: null,
+  about: "Add something about yourself",
+  parish: "Please add parish",
 };
 
 class SignUpFormBase extends Component {
   state = { ...INITIAL_STATE };
 
   onSubmit = (event) => {
-    const { username, email, passwordOne } = this.state;
+    const { username, email, phone, passwordOne, parish, about } = this.state;
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then((authUser) => {
+        // Create a user in your Firebase realtime database
+        return this.props.firebase.user(authUser.user.uid).set({
+          username,
+          email,
+          phone,
+          parish,
+          about,
+        });
+      })
+      .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.history.push(ROUTES.ACCOUNT);
       })
       .catch((error) => {
         this.setState({ error });
@@ -43,7 +56,14 @@ class SignUpFormBase extends Component {
   };
 
   render() {
-    const { username, email, passwordOne, passwordTwo, error } = this.state;
+    const {
+      username,
+      phone,
+      email,
+      passwordOne,
+      passwordTwo,
+      error,
+    } = this.state;
 
     const isInvalid =
       passwordOne !== passwordTwo ||
@@ -67,6 +87,14 @@ class SignUpFormBase extends Component {
           onChange={this.onChange}
           type="text"
           placeholder="Email Address"
+          className="inputs"
+        />
+        <input
+          name="phone"
+          value={phone}
+          onChange={this.onChange}
+          type="tel"
+          placeholder="Phone number"
           className="inputs"
         />
         <input
